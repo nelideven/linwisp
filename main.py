@@ -93,7 +93,6 @@ def launch_tray(args):
         try:
             gi.require_version('AyatanaAppIndicator3', '0.1')
             from gi.repository import AyatanaAppIndicator3 as AppIndicator3
-            print("Using AyatanaAppIndicator3")
         except (ImportError, ValueError):
             gi.require_version('AppIndicator3', '0.1')
             from gi.repository import AppIndicator3
