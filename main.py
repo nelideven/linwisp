@@ -86,12 +86,17 @@ def confirm_prompt_empty(gui_mode):
         return input("Empty prompt. Are you sure? (y/n): ").strip().lower() == 'y'
 
 def launch_tray(args):
-    # try:
+    try:
         import gi
         gi.require_version('Gtk', '3.0')
-        gi.require_version('AyatanaAppIndicator3', '0.1')
         from gi.repository import Gtk
-        from gi.repository import AyatanaAppIndicator3 as AppIndicator3
+        try:
+            gi.require_version('AyatanaAppIndicator3', '0.1')
+            from gi.repository import AyatanaAppIndicator3 as AppIndicator3
+            print("Using AyatanaAppIndicator3")
+        except (ImportError, ValueError):
+            gi.require_version('AppIndicator3', '0.1')
+            from gi.repository import AppIndicator3
         from functools import partial
 
         APP_ID = "LinWisp.Tray"
@@ -158,9 +163,9 @@ def launch_tray(args):
 
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         Gtk.main()
-    # except Exception as e:
-    #     print(f"Failed to launch tray: {e}")
-    #     exit(1)
+    except Exception as e:
+        print(f"Failed to launch tray: {e}")
+        exit(1)
 
 def main_cli(args):
     config = load_config()
