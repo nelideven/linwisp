@@ -18,3 +18,9 @@ sounddevice<br>
 webrtcvad<br>
 pycairo<br>
 PyGObject
+
+## How-to
+Use:
+1. Install the required packages (if already installed, you can ignore it),
+2. Download the main.py and core.py and place it in the same folder,
+3. Afterwards, you can either run it directly (python3 main.py) or place the tray (python3 main.py --tray).
