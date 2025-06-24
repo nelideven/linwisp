@@ -12,7 +12,8 @@ gir1.2-appindicator3-0.1 OR gir1.2-ayatanaappindicator (depending on your distro
 
 Python packages:<br>
 NumPy<br>
-tomli & tomli_w<br>
+tomli<br>
+tomli-w<br>
 openai-whisper<br>
 sounddevice<br>
 webrtcvad<br>
