@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 '''
     LinWisp: A simple AI assistant for Linux using Google Gemini and OpenAI Whisper.
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -71,16 +73,14 @@ def update_config(args):
 
 def prompt_input(gui_mode):
     if gui_mode:
-        result = subprocess.run("zenity --entry --title='LinWisp' --text='Enter your prompt:'",
-                                shell=True, capture_output=True, text=True)
+        result = subprocess.run("zenity --entry --title='LinWisp' --text='Enter your prompt:'", capture_output=True, text=True, shell=True)
         return result.stdout.strip()
     else:
         return input("Enter your prompt: ").strip()
 
 def confirm_prompt_empty(gui_mode):
     if gui_mode:
-        confirm = subprocess.run("zenity --question --title='LinWisp' --text='Empty prompt. Are you sure?'",
-                                 shell=True)
+        confirm = subprocess.run("zenity --question --title='LinWisp' --text='Empty prompt. Are you sure?'", shell=True)
         return confirm.returncode == 0
     else:
         return input("Empty prompt. Are you sure? (y/n): ").strip().lower() == 'y'
@@ -96,6 +96,7 @@ def launch_tray(args):
         except (ImportError, ValueError):
             gi.require_version('AppIndicator3', '0.1')
             from gi.repository import AppIndicator3
+
         from functools import partial
 
         APP_ID = "LinWisp.Tray"
@@ -127,9 +128,9 @@ def launch_tray(args):
                 response = ask_ai(prompt, api_key, model)
                 if method == "speak":
                     subprocess.run(["espeak", "-s", "150", "-v", "en-us", response])
-                subprocess.run(["zenity", "--text-info", "--title=LinWisp", "--width=600", "--height=400", "--no-wrap"], input=response, text=True)
+                subprocess.run(["zenity", "--text-info", "--title=LinWisp", "--width=600", "--height=400", "--no-wrap"], input=response, text=True, shell=True)
             except Exception as e:
-                subprocess.run(["zenity", "--error", "--title=LinWisp", "--text", str(e)])
+                subprocess.run(["zenity", "--error", "--title=LinWisp", "--text", str(e)], shell=True)
 
         def on_quit(_):
             Gtk.main_quit()
@@ -174,12 +175,12 @@ def main_cli(args):
 
     if not api_key:
         print("API key is required. Set it using --apikey.")
-        subprocess.run("zenity --error --text='API key is required. Set it using --apikey.'")
+        subprocess.run("zenity --error --text='API key is required. Set it using --apikey.'", shell=True)
         exit(1)
 
     if not model:
         print("Model is required. Set it using --model or edit config.toml.")
-        subprocess.run("zenity --error --text='Model is required. Set it using --model or edit config.toml.'")
+        subprocess.run("zenity --error --text='Model is required. Set it using --model or edit config.toml.'", shell=True)
         exit(1)
 
     if args.record:
@@ -201,7 +202,7 @@ def main_cli(args):
     except Exception as e:
         print(f"An error occurred: {e}")
         if gui_mode:
-            subprocess.run(["zenity", "--error", "--text", f"An error occurred: {e}"])
+            subprocess.run(["zenity", "--error", "--text", f"An error occurred: {e}"], shell=True)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="LinWisp: A simple AI assistant for Linux using Google Gemini and OpenAI Whisper.")
@@ -232,5 +233,5 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"An error occurred: {e}")
             if args.gui:
-                subprocess.run(["zenity", "--error", "--text", f"An error occurred: {e}"])
+                subprocess.run(["zenity", "--error", "--text", f"An error occurred: {e}"], shell=True)
             exit(1)

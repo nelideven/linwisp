@@ -10,10 +10,14 @@ import json
 import re
 import tomli
 import tomli_w
+import keyring
 import subprocess
+from platformdirs import user_config_dir
 
-CONFIG_PATH = "config.toml"
-API_KEY_PATH = "api_key"
+DIR_PATH = user_config_dir("linwisp")
+CONFIG_PATH = os.path.join(DIR_PATH, "config.toml")
+if not os.path.exists(DIR_PATH):
+    os.makedirs(DIR_PATH)
 
 def load_config(path=CONFIG_PATH):
     if not os.path.exists(path):
@@ -26,15 +30,15 @@ def save_config(data, path=CONFIG_PATH):
     with open(path, "wb") as f:
         f.write(tomli_w.dumps(data).encode("utf-8"))
 
-def load_api_key(path=API_KEY_PATH):
-    if not os.path.exists(path):
-        return ""
-    with open(path, "r") as f:
-        return f.read().strip()
+SERVICE_NAME = "linwisp"
+API_KEY_USERNAME = "api_key"
 
-def save_api_key(key, path=API_KEY_PATH):
-    with open(path, "w") as f:
-        f.write(key.strip())
+def load_api_key():
+    key = keyring.get_password(SERVICE_NAME, API_KEY_USERNAME)
+    return key or ""
+
+def save_api_key(key):
+    keyring.set_password(SERVICE_NAME, API_KEY_USERNAME, key.strip())
 
 def extract_text(gemini_output):
     try:
