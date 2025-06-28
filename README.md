@@ -17,6 +17,8 @@ tomli-w<br>
 openai-whisper<br>
 sounddevice<br>
 webrtcvad<br>
+keyring<br>
+platformdirs<br>
 pycairo<br>
 PyGObject
 
